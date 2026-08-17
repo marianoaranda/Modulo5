@@ -5,7 +5,7 @@
 | Ticket | FEAT-001a |
 | Tracker | none |
 | Date | 2026-08-17 |
-| PRD loops | 0 |
+| PRD loops | 1 |
 
 ## Context and Problem
 
@@ -25,7 +25,8 @@ una sesión autenticada (JWT) para acceder a los endpoints protegidos. Este tick
 
 **Usuarios** (equivalen a RF-04 a RF-06 del PRD maestro)
 - FR-01: El sistema debe permitir dar de alta un usuario con los campos UsuarioId (autonumérico),
-  Usuario, NombreCompleto, Hash y Salt.
+  Usuario, NombreCompleto, Hash, Salt y PerfilId (referencia al Perfil de seguridad del usuario,
+  necesaria para que FR-07 pueda determinar si el usuario autenticado es del perfil administrador).
 - FR-02: El sistema debe permitir dar de baja un usuario existente.
 - FR-03: El sistema debe permitir modificar los datos de un usuario existente.
 
@@ -64,8 +65,9 @@ una sesión autenticada (JWT) para acceder a los endpoints protegidos. Este tick
 ## Acceptance Criteria
 
 **Usuarios**
-- AC-01: WHEN un administrador da de alta un usuario con datos válidos, THE sistema SHALL
-  persistirlo y permitir su recuperación por UsuarioId. (FR-01)
+- AC-01: WHEN un administrador da de alta un usuario con datos válidos (incluido su PerfilId), THE
+  sistema SHALL persistirlo y permitir su recuperación por UsuarioId, incluyendo el PerfilId
+  persistido. (FR-01)
 - AC-02: WHEN un administrador elimina un usuario existente, THE sistema SHALL eliminarlo de forma
   que ya no pueda recuperarse por su UsuarioId. (FR-02)
 - AC-03: WHEN un administrador modifica los datos de un usuario existente, THE sistema SHALL
@@ -115,6 +117,9 @@ una sesión autenticada (JWT) para acceder a los endpoints protegidos. Este tick
 - Riesgo: que el algoritmo de hashing/salt elegido en PLAN no sea el adecuado para las 5 concurrencias
   esperadas (NFR-04). Mitigación: usar un algoritmo estándar de la industria (a definir en PLAN, p.
   ej. PBKDF2 o BCrypt) con costo configurable.
+- Corrección (PRD loops=1): FR-01 no incluía originalmente un campo que vinculara el Usuario con su
+  Perfil, lo que hacía irrealizable FR-07/AC-08 (restringir el ABM de usuarios al perfil
+  administrador). Se agregó el campo PerfilId a FR-01 durante PLAN, vía loop correctivo a DEFINE.
 - Dependencia: ninguna.
 
 ## Dependencies
