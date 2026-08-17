@@ -1,9 +1,11 @@
 using System.Text;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Modulo5.Api.Authorization;
 using Modulo5.Api.Middleware;
 using Modulo5.Api.Security;
 using Modulo5.Data;
@@ -58,7 +60,14 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization();
+// Política "AdminOnly" (Block 4 del spec FEAT-001a — mitigación del riesgo #4 del threat model):
+// autorización explícita por PerfilId, no solo "tiene JWT válido". Evaluación real en
+// AdminOnlyHandler, resuelta contra el perfil "administrador" en la base (no un id hardcodeado).
+builder.Services.AddScoped<IAuthorizationHandler, AdminOnlyHandler>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.Requirements.Add(new AdminOnlyRequirement()));
+});
 
 // Rate limiting nativo de .NET 8 (Microsoft.AspNetCore.RateLimiting, sin paquete nuevo) — ventana
 // fija de 5 requests/minuto por IP sobre POST /api/auth/login (mitigación del riesgo #7).
