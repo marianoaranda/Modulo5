@@ -1,0 +1,39 @@
+@model UsuarioCreateViewModel
+@{
+    ViewData["Title"] = "Nuevo usuario";
+}
+
+<h1>Nuevo usuario</h1>
+
+<div asp-validation-summary="ModelOnly" class="mensaje-error"></div>
+
+<form asp-controller="Usuarios" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label asp-for="Usuario"></label>
+        <input asp-for="Usuario" />
+        <span asp-validation-for="Usuario" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="NombreCompleto"></label>
+        <input asp-for="NombreCompleto" />
+        <span asp-validation-for="NombreCompleto" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="PerfilId"></label>
+        <input asp-for="PerfilId" type="number" min="1" />
+        <span asp-validation-for="PerfilId" class="mensaje-error"></span>
+    </div>
+
+    <button type="submit">Crear</button>
+    <a href="/Usuarios">Cancelar</a>
+</form>

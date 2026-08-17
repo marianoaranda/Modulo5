@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modulo5 — @ViewData["Title"]</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/Usuarios">Usuarios</a>
+            <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline">
+                @Html.AntiForgeryToken()
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </nav>
+    </header>
+
+    <main>
+        @if (TempData["Mensaje"] is string mensaje)
+        {
+            <p class="mensaje-ok">@mensaje</p>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <p class="mensaje-error">@error</p>
+        }
+
+        @RenderBody()
+    </main>
+</body>
+</html>

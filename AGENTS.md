@@ -41,13 +41,13 @@ files and **propose the text for you to paste here**. You always confirm it.
 
 | Field | Value |
 |-------|-------|
-| Language | [e.g. TypeScript 5.x] |
-| Runtime | [e.g. Node 20] |
-| Framework | [e.g. Next.js 15 · or N/A] |
-| Database | [e.g. PostgreSQL + Prisma · or N/A] |
-| Test runner | [e.g. Vitest] |
-| Linter / formatter | [e.g. ESLint + Prettier] |
-| Package manager | [e.g. pnpm] |
+| Language | C# (.NET 8) |
+| Runtime | .NET 8 |
+| Framework | ASP.NET MVC (Front-End) + ASP.NET Web API REST (Back-End), autenticación JWT |
+| Database | SQL Server 2017 |
+| Test runner | xUnit |
+| Linter / formatter | dotnet format (EditorConfig) |
+| Package manager | NuGet |
 
 ---
 
@@ -56,11 +56,24 @@ files and **propose the text for you to paste here**. You always confirm it.
 **DAW validates your code against this section** during the CODE phase, via `daw-validate-arch`.
 Leave it empty and that validation has nothing to compare against, so it stops being worth running.
 
-- **Folder structure:** [e.g. `src/features/<feature>/` with `ui`, `domain`, `data`]
-- **Layer separation:** [e.g. the UI never talks to the database; always through a service]
-- **Error handling:** [e.g. typed errors; never a silent catch]
-- **Naming:** [e.g. files in kebab-case, components in PascalCase]
-- **Dependencies:** [e.g. no new libraries without justifying them in the spec]
+- **Estructura de solución:** `Modulo5.sln` con `src/Modulo5.Web` (ASP.NET MVC, Front-End),
+  `src/Modulo5.Api` (ASP.NET Web API REST, autenticación JWT), `src/Modulo5.Domain` (entidades y
+  lógica de negocio), `src/Modulo5.Data` (EF Core 8 + SQL Server: DbContext, Migrations, seeds); y
+  `tests/Modulo5.Domain.Tests`, `tests/Modulo5.Api.Tests` (xUnit).
+- **Separación de capas:** `Web` nunca habla directo con `Data`; siempre a través de `Api`. `Api`
+  expone controladores delgados que delegan las reglas de negocio a `Domain`; `Domain` no depende de
+  `Data` ni de `Api` (solo define interfaces que `Data` implementa).
+- **ORM:** Entity Framework Core 8, Code-First con Migrations. Las migraciones incluyen los seeds
+  necesarios (p. ej. el perfil "administrador").
+- **Autenticación:** JWT vía `Microsoft.AspNetCore.Authentication.JwtBearer`, expiración de 60
+  minutos, sin refresh token. Contraseñas con PBKDF2 (`Rfc2898DeriveBytes`, nativo de .NET) y salt
+  aleatorio de 16 bytes por usuario.
+- **Manejo de errores:** excepciones de dominio tipadas (p. ej. `ValidationException`,
+  `NotFoundException`) capturadas en un middleware único de la Web API que las traduce a códigos
+  HTTP; nunca un catch silencioso.
+- **Naming:** proyectos y clases en PascalCase (convención .NET estándar); archivos = nombre de la
+  clase que contienen.
+- **Dependencias:** ninguna librería nueva sin justificarla en el spec del ticket que la introduce.
 
 ---
 

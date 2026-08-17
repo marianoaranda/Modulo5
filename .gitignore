@@ -12,3 +12,9 @@
 # Python bytecode (scripts de .daw/scripts/)
 __pycache__/
 *.pyc
+
+# .NET (Block 1 — FEAT-001a)
+bin/
+obj/
+*.user
+appsettings.*.local.json
