@@ -1,0 +1,33 @@
+root = true
+
+[*]
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+indent_size = 4
+csharp_new_line_before_open_brace = all
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+# Naming: PascalCase para tipos, miembros públicos y proyectos (AGENTS.md — Architecture
+# conventions: "proyectos y clases en PascalCase").
+dotnet_naming_rule.types_should_be_pascal_case.severity = warning
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_namespace_declarations = file_scoped:suggestion
+dotnet_style_require_accessibility_modifiers = always:suggestion
+
+[*.{json,yml,yaml}]
+indent_size = 2
+
+[*.{xml,csproj,sln}]
+indent_size = 2
