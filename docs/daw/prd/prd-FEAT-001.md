@@ -10,8 +10,8 @@
 
 | Sub-ticket | Title | PRD | Dependencies | Status |
 |---|---|---|---|---|
-| FEAT-001a | Autenticación (Usuarios, Credenciales y Login JWT) | prd-FEAT-001a.md | none | active |
-| FEAT-001b | ABM de Artículos | prd-FEAT-001b.md | depends on FEAT-001a | pending |
+| FEAT-001a | Autenticación (Usuarios, Credenciales y Login JWT) | prd-FEAT-001a.md | none | done (PR #1 — se mergea cuando se apruebe) |
+| FEAT-001b | ABM de Artículos | prd-FEAT-001b.md | depends on FEAT-001a | active |
 
 ## Suggested implementation order
 FEAT-001a → FEAT-001b
