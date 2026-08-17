@@ -41,13 +41,13 @@ files and **propose the text for you to paste here**. You always confirm it.
 
 | Field | Value |
 |-------|-------|
-| Language | [e.g. TypeScript 5.x] |
-| Runtime | [e.g. Node 20] |
-| Framework | [e.g. Next.js 15 · or N/A] |
-| Database | [e.g. PostgreSQL + Prisma · or N/A] |
-| Test runner | [e.g. Vitest] |
-| Linter / formatter | [e.g. ESLint + Prettier] |
-| Package manager | [e.g. pnpm] |
+| Language | C# (.NET 8) |
+| Runtime | .NET 8 |
+| Framework | ASP.NET MVC (Front-End) + ASP.NET Web API REST (Back-End), autenticación JWT |
+| Database | SQL Server 2017 |
+| Test runner | xUnit |
+| Linter / formatter | dotnet format (EditorConfig) |
+| Package manager | NuGet |
 
 ---
 
