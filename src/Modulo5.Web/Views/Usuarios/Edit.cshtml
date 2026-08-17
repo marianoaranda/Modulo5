@@ -1,0 +1,41 @@
+@model UsuarioEditViewModel
+@{
+    ViewData["Title"] = "Modificar usuario";
+}
+
+<h1>Modificar usuario #@Model.UsuarioId</h1>
+
+@*
+    ASSUMPTION documentada en el reporte del bloque: la Api (Block 4) no expone un endpoint GET para
+    recuperar un usuario existente, así que este formulario no puede pre-cargar NombreCompleto/PerfilId
+    actuales — deben reingresarse completos (el PUT de la Api tampoco admite un patch parcial de esos
+    dos campos).
+*@
+
+<div asp-validation-summary="ModelOnly" class="mensaje-error"></div>
+
+<form asp-controller="Usuarios" asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="UsuarioId" />
+
+    <div>
+        <label asp-for="NombreCompleto"></label>
+        <input asp-for="NombreCompleto" />
+        <span asp-validation-for="NombreCompleto" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="PerfilId"></label>
+        <input asp-for="PerfilId" type="number" min="1" />
+        <span asp-validation-for="PerfilId" class="mensaje-error"></span>
+    </div>
+
+    <button type="submit">Guardar</button>
+    <a href="/Usuarios">Cancelar</a>
+</form>

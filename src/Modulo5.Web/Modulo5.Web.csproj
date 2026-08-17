@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!--
+    Deliberadamente SIN ProjectReference a Modulo5.Domain ni Modulo5.Data (AGENTS.md, "Separación de
+    capas": "Web nunca habla directo con Data; siempre a través de Api"). Toda comunicación con el
+    backend pasa por HTTP vía Services/ApiClient.cs contra Modulo5.Api.
+  -->
+
+</Project>

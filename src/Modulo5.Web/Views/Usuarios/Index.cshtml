@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+@*
+    ASSUMPTION documentada en el reporte del bloque: la Api (Block 4) no expone un endpoint de listado
+    (GET /api/usuarios), así que esta pantalla es un panel de navegación del ABM (alta, y
+    modificar/eliminar por UsuarioId conocido) en vez de una grilla real de usuarios.
+*@
+
+<h1>Usuarios</h1>
+
+<p><a href="/Usuarios/Create">Dar de alta un usuario</a></p>
+
+@*
+    CORRECCIÓN (ronda 2, arch review): las rutas de UsuariosController esperan el id como segmento
+    de URL (Edit/{id:int}, Delete/{id:int}), no como query string ni como campo de body. El id se
+    conoce recién al enviar (el usuario lo tipea), así que no se puede usar asp-route-id en el
+    <form> al momento de renderizar. Se resuelve interpolando el id tipeado en la action del form
+    justo antes de enviarlo, con JS vanilla inline (sin dependencias nuevas, consistente con que
+    este proyecto no tiene bundler de JS).
+*@
+
+<h2>Modificar un usuario existente</h2>
+<form asp-controller="Usuarios" asp-action="Edit" method="get" onsubmit="return submitConUrlDeId(this, 'editId', '/Usuarios/Edit/');">
+    <label for="editId">UsuarioId</label>
+    <input type="number" min="1" id="editId" name="id" required />
+    <button type="submit">Editar</button>
+</form>
+
+<h2>Eliminar un usuario existente</h2>
+<form asp-controller="Usuarios" asp-action="Delete" method="post"
+      onsubmit="return confirm('¿Confirma la baja de este usuario?') && submitConUrlDeId(this, 'deleteId', '/Usuarios/Delete/');">
+    @Html.AntiForgeryToken()
+    <label for="deleteId">UsuarioId</label>
+    <input type="number" min="1" id="deleteId" name="id" required />
+    <button type="submit">Eliminar</button>
+</form>
+
+<script>
+    function submitConUrlDeId(form, inputId, rutaBase) {
+        var id = document.getElementById(inputId).value;
+        form.action = rutaBase + encodeURIComponent(id);
+        return true;
+    }
+</script>
