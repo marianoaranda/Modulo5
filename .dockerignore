@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+.git/
+.daw-state.json
+.daw-paused/
+.daw-sessions/
+.daw-journal.jsonl
+docs/
+tests/
+**/*.user
+**/appsettings.*.local.json
