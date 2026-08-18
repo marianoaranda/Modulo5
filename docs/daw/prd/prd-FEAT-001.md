@@ -4,14 +4,14 @@
 |--------|-------|
 | Ticket | FEAT-001 |
 | Date | 2026-08-17 |
-| Status | Split |
+| Status | Split — completo (FEAT-001a y FEAT-001b) |
 
 ## Sub-tickets
 
 | Sub-ticket | Title | PRD | Dependencies | Status |
 |---|---|---|---|---|
 | FEAT-001a | Autenticación (Usuarios, Credenciales y Login JWT) | prd-FEAT-001a.md | none | done (PR #1 — se mergea cuando se apruebe) |
-| FEAT-001b | ABM de Artículos | prd-FEAT-001b.md | depends on FEAT-001a | active |
+| FEAT-001b | ABM de Artículos | prd-FEAT-001b.md | depends on FEAT-001a | done (PR #2 — se mergea cuando se apruebe) |
 
 ## Suggested implementation order
 FEAT-001a → FEAT-001b

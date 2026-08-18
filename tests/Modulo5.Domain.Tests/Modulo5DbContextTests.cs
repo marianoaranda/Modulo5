@@ -110,4 +110,82 @@ public class Modulo5DbContextTests : IDisposable
         // Act & Assert
         Assert.Throws<DbUpdateException>(() => context.SaveChanges());
     }
+
+    [Fact]
+    public void Articulo_con_datos_validos_se_persiste_y_se_recupera_por_Codigo()
+    {
+        // Arrange — soporta AC-01 (Block 1 del spec FEAT-001b)
+        using (var context = new Modulo5DbContext(_options))
+        {
+            var articulo = new Articulo
+            {
+                Codigo = "ART-001",
+                Descripcion = "Artículo de prueba",
+                PrecioCosto = 100m,
+                Margen = 20m,
+                PrecioVenta = 120m,
+                StockMinimo = 5,
+                PuntoPedido = 10,
+                StockIdeal = 20
+            };
+
+            // Act
+            context.Articulos.Add(articulo);
+            context.SaveChanges();
+        }
+
+        // Assert — se recupera con un DbContext nuevo, misma conexión (evita falsos positivos por
+        // el change tracker de la primera instancia)
+        using var readContext = new Modulo5DbContext(_options);
+        var recuperado = readContext.Articulos.Find("ART-001");
+
+        Assert.NotNull(recuperado);
+        Assert.Equal("Artículo de prueba", recuperado!.Descripcion);
+        Assert.Equal(100m, recuperado.PrecioCosto);
+        Assert.Equal(20m, recuperado.Margen);
+        Assert.Equal(120m, recuperado.PrecioVenta);
+        Assert.Equal(5, recuperado.StockMinimo);
+        Assert.Equal(10, recuperado.PuntoPedido);
+        Assert.Equal(20, recuperado.StockIdeal);
+    }
+
+    [Fact]
+    public void Persistir_dos_Articulo_con_el_mismo_Codigo_viola_la_PK()
+    {
+        // Arrange — soporta la integridad que AC-01/AC-05 asumen (Block 1 del spec FEAT-001b)
+        using (var context = new Modulo5DbContext(_options))
+        {
+            context.Articulos.Add(new Articulo
+            {
+                Codigo = "ART-DUP",
+                Descripcion = "Primero",
+                PrecioCosto = 100m,
+                Margen = 10m,
+                PrecioVenta = 110m,
+                StockMinimo = 1,
+                PuntoPedido = 2,
+                StockIdeal = 3
+            });
+            context.SaveChanges();
+        }
+
+        // Segundo DbContext (misma conexión) para que la violación se detecte a nivel de base de
+        // datos (constraint real de la PK), no del identity map local de un único DbContext — que
+        // rechazaría el segundo Add antes incluso de llegar a SaveChanges.
+        using var secondContext = new Modulo5DbContext(_options);
+        secondContext.Articulos.Add(new Articulo
+        {
+            Codigo = "ART-DUP",
+            Descripcion = "Segundo",
+            PrecioCosto = 200m,
+            Margen = 10m,
+            PrecioVenta = 220m,
+            StockMinimo = 1,
+            PuntoPedido = 2,
+            StockIdeal = 3
+        });
+
+        // Act & Assert
+        Assert.Throws<DbUpdateException>(() => secondContext.SaveChanges());
+    }
 }
