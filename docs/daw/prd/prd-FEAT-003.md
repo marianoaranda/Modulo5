@@ -5,7 +5,7 @@
 | Ticket | FEAT-003 |
 | Tracker | none |
 | Date | 2026-08-18 |
-| PRD loops | 0 |
+| PRD loops | 1 |
 
 ## Context and Problem
 
@@ -28,8 +28,10 @@ completo.
 ## Functional Requirements
 
 - FR-01: El sistema debe tener una página Home (`GET /Home` o equivalente), accesible solo a
-  usuarios autenticados, con el mismo mecanismo de autenticación que `Usuarios`/`Articulos` (cookie
-  JWT).
+  usuarios autenticados. A diferencia de los `GET` actuales de `Usuarios`/`Articulos` (que no llaman
+  a la Api y por lo tanto no validan la sesión), el `GET` de Home debe hacer una llamada autenticada
+  a `Modulo5.Api` para forzar la validación del JWT en cada visita — mismo mecanismo de detección de
+  401 que ya usan las acciones POST de ambos controllers, aplicado también acá.
 - FR-02: La página Home debe mostrar: un link a Usuarios, un link a Articulos, y el control
   "Cerrar sesión" (mismo comportamiento que el botón actual de `_Layout.cshtml`).
 - FR-03: Tras un login exitoso, el sistema debe redireccionar a Home (en vez de a `/Usuarios`, como
@@ -42,9 +44,12 @@ completo.
 
 ## Non-Functional Requirements
 
-- NFR-01: La página Home reutiliza el mismo patrón de autenticación/autorización que
-  `UsuariosController`/`ArticulosController` (redirect a Login si no hay JWT válido) — no introduce
-  un mecanismo nuevo.
+- NFR-01: La página Home reutiliza el mismo mecanismo de autenticación/autorización que ya existe
+  en `UsuariosController`/`ArticulosController` (redirect a Login cuando la Api responde 401) — no
+  introduce un tipo de chequeo nuevo (p. ej. no valida el JWT localmente en el Web). La única
+  diferencia es que en Home ese mecanismo se dispara desde el propio `GET`, en vez de solo desde una
+  acción `POST`, porque Home es la única pantalla donde "recibir un 401" debe pasar con solo entrar
+  a la página (AC-05).
 
 ## Acceptance Criteria
 
