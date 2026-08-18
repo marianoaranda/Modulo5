@@ -1,0 +1,59 @@
+@model ArticuloEditViewModel
+@{
+    ViewData["Title"] = "Modificar artículo";
+}
+
+<h1>Modificar artículo @Model.Codigo</h1>
+
+@*
+    ASSUMPTION documentada en el reporte del bloque: la Api (Block 2) no expone un endpoint GET para
+    recuperar un artículo existente, así que este formulario no puede pre-cargar los valores actuales
+    — deben reingresarse completos (el PUT de la Api tampoco admite un patch parcial), mismo criterio
+    que Views/Usuarios/Edit.cshtml.
+*@
+
+<div asp-validation-summary="ModelOnly" class="mensaje-error"></div>
+
+<form asp-controller="Articulos" asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Codigo" />
+
+    <div>
+        <label asp-for="Descripcion"></label>
+        <input asp-for="Descripcion" />
+        <span asp-validation-for="Descripcion" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="PrecioCosto"></label>
+        <input asp-for="PrecioCosto" type="number" step="0.01" min="0" />
+        <span asp-validation-for="PrecioCosto" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="Margen"></label>
+        <input asp-for="Margen" type="number" step="0.01" min="0" />
+        <span asp-validation-for="Margen" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="StockMinimo"></label>
+        <input asp-for="StockMinimo" type="number" min="0" />
+        <span asp-validation-for="StockMinimo" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="PuntoPedido"></label>
+        <input asp-for="PuntoPedido" type="number" min="0" />
+        <span asp-validation-for="PuntoPedido" class="mensaje-error"></span>
+    </div>
+
+    <div>
+        <label asp-for="StockIdeal"></label>
+        <input asp-for="StockIdeal" type="number" min="0" />
+        <span asp-validation-for="StockIdeal" class="mensaje-error"></span>
+    </div>
+
+    <button type="submit">Guardar</button>
+    <a href="/Articulos">Cancelar</a>
+</form>

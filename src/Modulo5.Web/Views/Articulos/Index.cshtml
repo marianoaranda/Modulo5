@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Artículos";
+}
+
+@*
+    ASSUMPTION documentada en el reporte del bloque: la Api (Block 2) no expone un endpoint de listado
+    (GET /api/articulos), así que esta pantalla es un panel de navegación del ABM (alta, y
+    modificar/eliminar por Código conocido) en vez de una grilla real de artículos — mismo criterio
+    que Views/Usuarios/Index.cshtml.
+*@
+
+<h1>Artículos</h1>
+
+<p><a href="/Articulos/Create">Dar de alta un artículo</a></p>
+
+@*
+    Mismo criterio que Views/Usuarios/Index.cshtml: las rutas de ArticulosController esperan el
+    Código como segmento de URL (Edit/{codigo}, Delete/{codigo}), no como query string ni como campo
+    de body. El Código se conoce recién al enviar (el usuario lo tipea), así que no se puede usar
+    asp-route-codigo en el <form> al momento de renderizar. Se resuelve interpolando el Código
+    tipeado en la action del form justo antes de enviarlo, con JS vanilla inline.
+*@
+
+<h2>Modificar un artículo existente</h2>
+<form asp-controller="Articulos" asp-action="Edit" method="get" onsubmit="return submitConUrlDeCodigo(this, 'editCodigo', '/Articulos/Edit/');">
+    <label for="editCodigo">Código</label>
+    <input type="text" maxlength="30" id="editCodigo" name="codigo" required />
+    <button type="submit">Editar</button>
+</form>
+
+<h2>Eliminar un artículo existente</h2>
+<form asp-controller="Articulos" asp-action="Delete" method="post"
+      onsubmit="return confirm('¿Confirma la baja de este artículo?') && submitConUrlDeCodigo(this, 'deleteCodigo', '/Articulos/Delete/');">
+    @Html.AntiForgeryToken()
+    <label for="deleteCodigo">Código</label>
+    <input type="text" maxlength="30" id="deleteCodigo" name="codigo" required />
+    <button type="submit">Eliminar</button>
+</form>
+
+<script>
+    function submitConUrlDeCodigo(form, inputId, rutaBase) {
+        var codigo = document.getElementById(inputId).value;
+        form.action = rutaBase + encodeURIComponent(codigo);
+        return true;
+    }
+</script>
