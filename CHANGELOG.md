@@ -6,6 +6,10 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
+### Fixed
+
+- [FIX-001] Agregar link de navegación al ABM de Artículos en el menú principal — existía y funcionaba desde FEAT-001b pero no era alcanzable desde ninguna vista de la app.
+
 ### Added
 
 - [FEAT-001b] ABM de Artículos: alta/baja/modificación de artículos (Código, Descripción, Precio de Costo, Margen, Stock Mínimo, Punto de Pedido, Stock Ideal), cálculo automático del Precio de Venta (Precio de Costo × (1 + Margen/100)) siempre recalculado server-side, validaciones de negocio (Código único, sin valores negativos, Stock Mínimo ≤ Punto de Pedido ≤ Stock Ideal), endpoints REST protegidos por JWT (sin restricción de perfil), auditoría de operaciones (actor + Código + operación + timestamp), y pantalla web MVC del ABM.
