@@ -1,0 +1,77 @@
+name: modulo5
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: modulo5-db
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${SA_PASSWORD:?SA_PASSWORD no está definida. Copiá .env.example a .env y completá los valores}"
+      MSSQL_PID: "Developer"
+    ports:
+      # Bindeado a 127.0.0.1 (mitigación riesgo #1 del threat model de FEAT-002): el puerto
+      # de SQL Server NO se publica en todas las interfaces, solo es alcanzable desde la propia
+      # máquina del desarrollador.
+      - "127.0.0.1:1433:1433"
+    volumes:
+      - modulo5-db-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P \"$$SA_PASSWORD\" -Q 'SELECT 1' -b -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  db-init:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: modulo5-db-init
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SA_PASSWORD: "${SA_PASSWORD:?SA_PASSWORD no está definida. Copiá .env.example a .env y completá los valores}"
+    volumes:
+      - ./docker/seed:/seed:ro
+    entrypoint: >
+      /bin/bash -c "
+      /opt/mssql-tools/bin/sqlcmd -S db -U sa -P \"$$SA_PASSWORD\" -Q \"IF DB_ID('Modulo5') IS NULL CREATE DATABASE Modulo5\" &&
+      /opt/mssql-tools/bin/sqlcmd -S db -U sa -P \"$$SA_PASSWORD\" -d Modulo5 -i /seed/001-migrations.sql &&
+      /opt/mssql-tools/bin/sqlcmd -S db -U sa -P \"$$SA_PASSWORD\" -d Modulo5 -i /seed/002-seed-admin.sql
+      "
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Modulo5.Api/Dockerfile
+    container_name: modulo5-api
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      # Solo para este entorno Docker de prueba manual local — NUNCA los valores reales de
+      # producción, que siguen viniendo exclusivamente de user-secrets/variables de entorno del
+      # host real (mitigación riesgo #1 del threat model, ver src/Modulo5.Api/Program.cs).
+      # SA_PASSWORD y Jwt__SigningKey se resuelven desde el .env local (gitignoreado, ver
+      # .env.example) — mitigación riesgo #2 del threat model de FEAT-002.
+      ConnectionStrings__Default: "Server=db;Database=Modulo5;User Id=sa;Password=${SA_PASSWORD:?SA_PASSWORD no está definida. Copiá .env.example a .env y completá los valores};TrustServerCertificate=True;Encrypt=False"
+      Jwt__SigningKey: "${JWT_SIGNING_KEY:?JWT_SIGNING_KEY no está definida. Copiá .env.example a .env y completá los valores}"
+    ports:
+      - "5080:8080"
+
+  web:
+    build:
+      context: .
+      dockerfile: src/Modulo5.Web/Dockerfile
+    container_name: modulo5-web
+    depends_on:
+      - api
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ApiClient__BaseUrl: "http://api:8080/"
+    ports:
+      - "5000:8080"
+
+volumes:
+  modulo5-db-data:

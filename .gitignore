@@ -18,3 +18,7 @@ bin/
 obj/
 *.user
 appsettings.*.local.json
+
+# Docker (Block 2 — FEAT-002): credenciales locales de desarrollo, nunca versionadas
+# (mitigación riesgo #2 del threat model). .env.example SÍ se commitea.
+.env
