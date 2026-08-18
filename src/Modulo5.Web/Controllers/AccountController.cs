@@ -50,7 +50,7 @@ public class AccountController : Controller
             Path = "/"
         });
 
-        return RedirectToAction("Index", "Usuarios");
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpPost("Logout")]

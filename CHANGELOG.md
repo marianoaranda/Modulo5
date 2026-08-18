@@ -6,6 +6,14 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
+### Added
+
+- [FEAT-003] Página Home: nuevo punto de entrada post-login con el menú de navegación completo (links a Usuarios y Articulos, botón Cerrar sesión).
+
+### Changed
+
+- [FEAT-003] El login exitoso redirige a `/Home` en vez de a `/Usuarios`. Las pantallas de Usuarios y Articulos ya no muestran el menú de navegación — solo un link "Volver a Home" (el "Cancelar" existente en los formularios se mantiene sin cambios). Reemplaza la solución provisoria de FIX-001.
+
 ### Fixed
 
 - [FIX-001] Agregar link de navegación al ABM de Artículos en el menú principal — existía y funcionaba desde FEAT-001b pero no era alcanzable desde ninguna vista de la app.

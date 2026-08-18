@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Home</h1>
+
+<nav>
+    <a href="/Usuarios">Usuarios</a>
+    <a href="/Articulos">Articulos</a>
+    <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline">
+        @Html.AntiForgeryToken()
+        <button type="submit">Cerrar sesión</button>
+    </form>
+</nav>
