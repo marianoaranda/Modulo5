@@ -5,7 +5,7 @@
 | Ticket | FEAT-003 |
 | Tracker | none |
 | Date | 2026-08-18 |
-| PRD loops | 1 |
+| PRD loops | 2 |
 
 ## Context and Problem
 
@@ -73,8 +73,11 @@ completo.
 - Las vistas `Views/Error/Index.cshtml` y `Views/Shared/AccesoDenegado.cshtml` no cambian: quedan
   fuera de este ticket (no son parte del flujo de trabajo normal Usuarios/Articulos).
 - No se agrega ninguna funcionalidad nueva a Usuarios ni Articulos más allá de quitarles el menú.
-- No hay cambios en la Api (`Modulo5.Api`) ni en el esquema de datos — es un cambio exclusivo de
-  `Modulo5.Web`.
+- No hay cambios **funcionales** en la Api (`Modulo5.Api`) ni en el esquema de datos — es un cambio
+  exclusivo de `Modulo5.Web` en su comportamiento. Se permite una excepción puntual: corregir
+  comentarios/documentación de código en `Modulo5.Api` que queden desactualizados como consecuencia
+  de este ticket (p. ej. el XML doc de un endpoint existente que empieza a ser parte del contrato
+  funcional real) — sin tocar firma, comportamiento ni política de autorización del endpoint.
 - No se agrega breadcrumb ni navegación jerárquica más allá del link "Volver a Home".
 
 ## Risks and Mitigations
