@@ -62,6 +62,20 @@ public class ApiClient
     public Task<ApiResult<object?>> EliminarUsuarioAsync(int id, CancellationToken ct = default) =>
         SendAuthenticatedAsync<object?>(HttpMethod.Delete, $"api/usuarios/{id}", body: null, ct);
 
+    /// <summary><c>POST /api/articulos</c> — alta (spec Block 3, FR-01/AC-01). Requiere JWT (sin
+    /// política adicional, a diferencia de Usuarios).</summary>
+    public Task<ApiResult<ArticuloDto>> CrearArticuloAsync(ArticuloRequestDto request, CancellationToken ct = default) =>
+        SendAuthenticatedAsync<ArticuloDto>(HttpMethod.Post, "api/articulos", request, ct);
+
+    /// <summary><c>PUT /api/articulos/{codigo}</c> — modificación (spec Block 3, FR-03/AC-03).</summary>
+    public Task<ApiResult<ArticuloDto>> ModificarArticuloAsync(
+        string codigo, ArticuloRequestDto request, CancellationToken ct = default) =>
+        SendAuthenticatedAsync<ArticuloDto>(HttpMethod.Put, $"api/articulos/{Uri.EscapeDataString(codigo)}", request, ct);
+
+    /// <summary><c>DELETE /api/articulos/{codigo}</c> — baja (spec Block 3, FR-02/AC-02).</summary>
+    public Task<ApiResult<object?>> EliminarArticuloAsync(string codigo, CancellationToken ct = default) =>
+        SendAuthenticatedAsync<object?>(HttpMethod.Delete, $"api/articulos/{Uri.EscapeDataString(codigo)}", body: null, ct);
+
     private async Task<ApiResult<T>> SendAuthenticatedAsync<T>(
         HttpMethod method, string uri, object? body, CancellationToken ct)
     {

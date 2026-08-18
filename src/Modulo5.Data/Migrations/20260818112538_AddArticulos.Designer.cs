@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Modulo5.Data;
 
@@ -10,9 +11,11 @@ using Modulo5.Data;
 namespace Modulo5.Data.Migrations
 {
     [DbContext(typeof(Modulo5DbContext))]
-    partial class Modulo5DbContextModelSnapshot : ModelSnapshot
+    [Migration("20260818112538_AddArticulos")]
+    partial class AddArticulos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
