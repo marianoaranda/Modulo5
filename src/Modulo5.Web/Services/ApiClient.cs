@@ -76,6 +76,12 @@ public class ApiClient
     public Task<ApiResult<object?>> EliminarArticuloAsync(string codigo, CancellationToken ct = default) =>
         SendAuthenticatedAsync<object?>(HttpMethod.Delete, $"api/articulos/{Uri.EscapeDataString(codigo)}", body: null, ct);
 
+    /// <summary><c>GET /api/auth/ping</c> — forzar la validación del JWT en cada visita a Home
+    /// (spec FEAT-003 Block 1, FR-01). Sin body de request ni de response, mismo patrón que
+    /// <see cref="EliminarUsuarioAsync"/>.</summary>
+    public Task<ApiResult<object?>> PingAsync(CancellationToken ct = default) =>
+        SendAuthenticatedAsync<object?>(HttpMethod.Get, "api/auth/ping", body: null, ct);
+
     private async Task<ApiResult<T>> SendAuthenticatedAsync<T>(
         HttpMethod method, string uri, object? body, CancellationToken ct)
     {

@@ -38,9 +38,13 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// <c>GET /api/auth/ping</c> — endpoint mínimo de diagnóstico, agregado EXCLUSIVAMENTE para
-    /// poder testear el middleware `JwtBearer` (AC-11: 401 sin token válido / pasa la autenticación
-    /// con token válido). No forma parte del contrato de negocio de este ticket.
+    /// <c>GET /api/auth/ping</c> — originalmente agregado como endpoint mínimo de diagnóstico para
+    /// testear el middleware `JwtBearer` (AC-11: 401 sin token válido / pasa la autenticación con
+    /// token válido). Desde FEAT-003, pasa a formar parte del contrato funcional real:
+    /// <c>Modulo5.Web</c> lo usa para forzar la validación del JWT en cada visita a
+    /// <c>GET /Home</c> (spec FEAT-003 Block 1, FR-01/AC-05), mismo mecanismo de detección de 401
+    /// que ya usan las acciones POST de <c>Usuarios</c>/<c>Articulos</c>. Sin cambios de
+    /// comportamiento ni de firma respecto de su versión original.
     /// </summary>
     [HttpGet("ping")]
     [Authorize]
